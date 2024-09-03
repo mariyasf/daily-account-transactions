@@ -83,6 +83,32 @@ async function run() {
 
         })
 
+        app.post('/login', async (req, res) => {
+            const { eID, password } = req.body;
+            console.log(eID, password);
+
+            try {
+
+                const [rows] = await db.query('SELECT * FROM users WHERE eID = ?', [eID]);
+                if (rows.length === 0) {
+                    return res.status(401).json({ message: 'Invalid eID' });
+                }
+
+                const user = rows[0];
+                const match = await bcrypt.compare(password, user.password);
+                console.log(password, user.password, match);
+
+                if (!match) {
+                    return res.status(401).json({ message: 'Invalid password' });
+                }
+
+                res.status(201).json({ message: 'Login successful' });
+            } catch (err) {
+                res.status(500).json({ message: 'Server error' });
+            }
+        });
+
+
         console.log("Pinged your deployment. You successfully connected to Mysql!");
     } finally {
 

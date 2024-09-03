@@ -113,7 +113,7 @@ const Register = () => {
                         <div className="form-control">
 
                             <input
-                                type="number"
+                                type="text"
                                 name='eID'
                                 placeholder="Employee ID"
                                 className="input input-bordered" required />
