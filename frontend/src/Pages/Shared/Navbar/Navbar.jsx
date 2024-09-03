@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const Navbar = () => {
     return (
@@ -7,9 +8,12 @@ const Navbar = () => {
                 <a className="text-white text-2xl">Pure <br /> <span className='font-bold'>Ledger.</span></a>
             </div>
             <div className="flex-none">
-                <button className="btn font-medium text-white bg-transparent hover:bg-transparent border-2">
-                    Login
-                </button>
+                <NavLink to={'/login'}>
+                    <button className="btn font-medium text-white bg-transparent hover:bg-transparent border-2">
+                        Login
+                    </button>
+                </NavLink>
+
             </div>
         </div>
     );

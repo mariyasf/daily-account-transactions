@@ -1,19 +1,95 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql');
-
+const bcrypt = require('bcrypt');
+const connectToDatabase = require('./lib/db');
 const app = express();
 const port = process.env.PORT || 5000
 
 app.use(cors());
 app.use(express.json());
 
-var db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "password",
-    database: 'trainee_developer'
-});
+
+
+require('dotenv').config()
+
+
+async function run() {
+
+    try {
+        const db = await connectToDatabase();
+
+        // Authentication
+
+        app.get('/users', async (req, res) => {
+            const [rows] = await db.query('SELECT * FROM users');
+            res.send(rows);
+
+        })
+
+        app.post('/users', async (req, res) => {
+            // const db = await connectToDatabase();
+
+            const { fullName,
+                gender,
+                dob,
+                email,
+                eID,
+                position,
+                password } = req.body;
+
+
+            const [month, day, year] = dob.split('/').map(Number);
+            const dobUpdate = new Date(year, month - 1, day);
+
+            console.log(fullName,
+                gender,
+                dobUpdate,
+                email,
+                eID,
+                position,
+                password);
+
+            try {
+                const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email])
+
+
+                if (rows.length > 0) {
+                    return res.status(409).json({ message: "user already existed" })
+                }
+
+                const hashPassword = await bcrypt.hash(password, 10)
+
+                await db.query(`INSERT INTO users (fullName,
+                                gender,
+                                dob,
+                                email,
+                                eID,
+                                position,
+                                password) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                    [fullName,
+                        gender,
+                        dobUpdate,
+                        email,
+                        eID,
+                        position,
+                        hashPassword])
+
+                return res.status(201).json({ message: "user created successfully" })
+
+            }
+            catch (err) {
+                return res.status(500).json(err.message)
+            }
+
+        })
+
+        console.log("Pinged your deployment. You successfully connected to Mysql!");
+    } finally {
+
+
+    }
+}
+run().catch(console.dir);
 
 
 

@@ -5,6 +5,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
     const [showPass, setShowPass] = useState(false);
+
     return (
         <div className="hero mt-[67px]">
             <div className="hero-content">
