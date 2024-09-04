@@ -2,15 +2,53 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const connectToDatabase = require('./lib/db');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
 const app = express();
 const port = process.env.PORT || 5000
 
-app.use(cors());
+// Middleware
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+    ],
+    // credentials: true,
+    // optionsSuccessStatus: 200,
+}));
+
 app.use(express.json());
-
-
+app.use(cookieParser());
 
 require('dotenv').config()
+
+const cookieOption = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' ? true : false,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+};
+
+// user MiddleWare
+const verifyToken = async (req, res, next) => {
+
+    const token = req.cookies?.token;
+
+    if (!token) {
+        return res.status(401).send({ message: 'No Token Provided' })
+    }
+
+    jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET,
+        (err, decoded) => {
+            if (err) {
+                return res.status(401).send({ message: 'unauthorized access' })
+            }
+            req.user = decoded;
+            next();
+        })
+}
+
 
 
 async function run() {
@@ -83,6 +121,17 @@ async function run() {
 
         })
 
+        app.get('/login', verifyToken, (req, res) => {
+            try {
+                const user = req.user;
+                res.status(200).json({ message: 'User authenticated', user });
+            } catch (err) {
+                res.status(500).json({ message: 'Internal server error', error: err.message });
+            }
+        });
+
+
+
         app.post('/login', async (req, res) => {
             const { eID, password } = req.body;
             console.log(eID, password);
@@ -102,12 +151,54 @@ async function run() {
                     return res.status(401).json({ message: 'Invalid password' });
                 }
 
-                res.status(201).json({ message: 'Login successful' });
-            } catch (err) {
+                const token = jwt.sign(
+                    user,
+                    process.env.ACCESS_TOKEN_SECRET,
+                    { expiresIn: '3h' })
+
+
+                // res.status(201).json({ message: 'Login successful' });
+                res
+                    .cookie('token', token, cookieOption)
+                    .status(201)
+                    .json({
+                        message: 'Login successful',
+                        token: token
+                    });
+            }
+            catch (err) {
                 res.status(500).json({ message: 'Server error' });
             }
         });
 
+        app.get('/users/:eID', async (req, res) => {
+            try {
+                const { eID } = req.params;
+                console.log(eID);
+
+                const [rows] = await db.query('SELECT * FROM users WHERE eID = ?', [eID]);
+
+                if (rows.length === 0) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+
+                const user = rows[0];
+                res.status(200).json(user);
+            } catch (err) {
+                res.status(500).json({ message: 'Server error', error: err.message });
+            }
+        });
+
+        app.get('/logout', async (req, res) => {
+            const user = req.body;
+            console.log('logging out', user);
+            res
+                .clearCookie('token', {
+                    ...cookieOption,
+                    maxAge: 0
+                })
+                .send({ success: true })
+        })
 
         console.log("Pinged your deployment. You successfully connected to Mysql!");
     } finally {

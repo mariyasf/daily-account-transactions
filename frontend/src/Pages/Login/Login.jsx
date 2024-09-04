@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
+import { useAuth } from '../../Provider/AuthProvider';
 
 
 const Login = () => {
     const [showPass, setShowPass] = useState(false);
-
+    const { login } = useAuth();
     const navigate = useNavigate();
+    // const axiosSecure = UseAxiosSecure()
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -21,18 +23,25 @@ const Login = () => {
             eID,
             password
         }
-        console.log(dataInfo);
+        // console.log(dataInfo);
 
         toast.dismiss();
 
         try {
-            const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, dataInfo)
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`,
+                dataInfo)
+
+           
             console.log(res);
+            toast.success('Login successful! You can now log in.');
+            
 
             if (res.status === 201) {
-                toast.success('Login successful! You can now log in.');
+                const token = res.data.token;
+                login(token, eID);
+                
                 navigate('/')
-                e.target.reset();
+
             }
         }
         catch (err) {
@@ -47,6 +56,7 @@ const Login = () => {
 
     return (
         <div className="hero mt-[67px]">
+            <ToastContainer />
             <div className="hero-content">
 
                 <div className="card rounded-none bg-[#F4FAFC] border-t-4 border-t-[#2397C8] w-[414px] shrink-0">

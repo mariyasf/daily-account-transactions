@@ -34,7 +34,7 @@ const Register = () => {
             position,
             password
         }
-        console.log(dataInfo);
+        // console.log(dataInfo);
 
         toast.dismiss();
 
@@ -42,18 +42,18 @@ const Register = () => {
             const res = await axios.post(`${import.meta.env.VITE_API_URL}/users`, dataInfo)
             console.log(res);
 
-            // toast.success('Registration successful! You can now log in.');
+            toast.success('Registration successful! You can now log in.');
 
             if (res.status === 201) {
-                toast.success('Registration successful! You can now log in.');
-                navigate('/login')
-                e.target.reset();
+                navigate('/profile');
             }
         }
         catch (err) {
             console.log(err);
             toast.error('Registration failed. Please try again later.');
         }
+
+
 
 
 
