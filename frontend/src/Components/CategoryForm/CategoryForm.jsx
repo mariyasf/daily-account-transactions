@@ -24,7 +24,6 @@ const CategoryForm = () => {
         fetchCategories();
     }, []);
 
-    // console.log(categories, categories.length);
 
 
     const handleSubmit = async (e) => {
@@ -44,8 +43,6 @@ const CategoryForm = () => {
             amount
         }
 
-        console.log(dataInfo);
-
         toast.dismiss();
 
         try {
@@ -53,7 +50,6 @@ const CategoryForm = () => {
             console.log('Success:', res.data);
             toast.success('Accounting entry added successfully!');
 
-            // Optionally reset the form or give feedback to the user
         } catch (error) {
             console.error('Error adding accounting entry:', error);
         }
@@ -75,7 +71,8 @@ const CategoryForm = () => {
 
                     <DatePicker
                         name='dob'
-                        className="flex-1 flex items-center justify-center w-full h-[48px] px-2  py-5 rounded-sm"
+                        className="flex-1 flex items-center justify-center w-full 
+                        h-[48px] px-2  py-5 rounded-sm"
                         placeholderText='Date Of Birth'
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
@@ -102,9 +99,11 @@ const CategoryForm = () => {
                         className="flex-1 h-[48px]  w-full px-2 rounded-sm"
                     >
                         <option value="" id="">Choose Head</option>
-                        {categories.map((category, index) => (
-                            <option key={category.id} value={category.id} id="">{category.name}</option>
-                        ))}
+                        {
+                            categories.map((category, index) => (
+                                <option key={category.id} value={category.name} id="">{category.name}</option>
+                            ))
+                        }
                     </select>
                 </div>
 

@@ -4,13 +4,6 @@ import CategoryCards from '../../Components/CategoryCards/CategoryCards';
 import CategoryForm from '../../Components/CategoryForm/CategoryForm';
 
 
-const categories = [
-    "Transportation",
-    "Office Management",
-    "Courier Cost",
-    "Stationary",
-    "Food"
-];
 
 const Accounting = () => {
 

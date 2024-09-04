@@ -8,6 +8,7 @@ import Profile from "../Pages/Profile/Profile";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Accounting from "../Pages/Accounting/Accounting";
+import Report from "../Pages/Report/Report";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
             {
                 path: "/accounting",
                 element: <Accounting />,
+            },
+            {
+                path: "/report",
+                element: <Report />,
             },
             {
                 path: "/login",

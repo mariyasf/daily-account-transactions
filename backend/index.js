@@ -235,7 +235,7 @@ async function run() {
             try {
 
                 const [result] = await db.query(`INSERT INTO records
-                     (dob, account, category_id, amount, eID) VALUES (?, ?, ?, ?, ?)`,
+                     (dob, account, category_name, amount, eID) VALUES (?, ?, ?, ?, ?)`,
                     [dob, account, head, amount, eID]);
 
                 return res.status(201).json({ message: "Entry added successfully" });
@@ -244,6 +244,29 @@ async function run() {
                 return res.status(500).json({ message: 'Failed to add entry', error: err.message });
             }
         });
+
+        app.get('/report-data', async (req, res) => {
+            const { eID } = req.query;
+
+            if (!eID) {
+                return res.status(400).json({ message: 'eID is required.' });
+            }
+
+            try {
+                const [rows] = await db.query(`SELECT * FROM records
+                    WHERE eID = ?`, [eID]);
+
+                if (rows.length === 0) {
+                    return res.status(404).json({ message: 'No data found for the given eID.' });
+                }
+
+                return res.status(200).json(rows);
+            } catch (err) {
+                console.error('Error fetching report data:', err);
+                return res.status(500).json({ message: 'Failed to fetch report data', error: err.message });
+            }
+        });
+
 
 
 
