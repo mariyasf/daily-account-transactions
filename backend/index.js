@@ -189,6 +189,64 @@ async function run() {
             }
         });
 
+        app.get('/categories', async (req, res) => {
+            const { name } = req.body;
+            try {
+                const [rows] = await db.query('SELECT * FROM categories ORDER BY id ASC');
+
+                res.json(rows);
+            }
+            catch (err) {
+                res.status(500).json({ message: 'Failed to fetch categories', error: err.message });
+            }
+        });
+
+        app.post('/categories', async (req, res) => {
+            const { name } = req.body;
+            console.log(name);
+            if (!name) {
+                return res.status(400).json({ message: 'Name is required.' });
+            }
+
+            try {
+                const [result] = await db.query('INSERT INTO categories (name) VALUES (?)',
+                    [name]);
+
+                return res.status(201).json({ message: "Added successfully" });
+            } catch (err) {
+                res.status(500).json({ message: 'Failed to add category', error: err.message });
+            }
+        });
+
+        app.post('/add-accounting', async (req, res) => {
+            const { dob, account, head, amount, eID } = req.body;
+
+            if (!dob || !account || !head || !amount || !eID) {
+                return res.status(400).json({ message: 'All fields are required.' });
+            }
+
+            const [userCheck] = await db.query('SELECT eID FROM users WHERE eID = ?', [eID]);
+
+            if (userCheck.length === 0) {
+                return res.status(400).json({ message: 'Invalid eID. User not found.' });
+            }
+
+
+            try {
+
+                const [result] = await db.query(`INSERT INTO records
+                     (dob, account, category_id, amount, eID) VALUES (?, ?, ?, ?, ?)`,
+                    [dob, account, head, amount, eID]);
+
+                return res.status(201).json({ message: "Entry added successfully" });
+            } catch (err) {
+                console.error('Failed to add entry:', err.message);
+                return res.status(500).json({ message: 'Failed to add entry', error: err.message });
+            }
+        });
+
+
+
         app.get('/logout', async (req, res) => {
             const user = req.body;
             console.log('logging out', user);

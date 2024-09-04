@@ -73,6 +73,7 @@ const Register = () => {
                             <h2 className='text-[#2397C8] font-semibold'>Welcome to PureLedger</h2>
                             <p className='text-[#9E9E9E] font-medium'>Fill up this form to Register</p>
                         </div>
+                       
                         <div className="form-control">
 
                             <input type="text"
@@ -80,6 +81,7 @@ const Register = () => {
                                 placeholder="Full Name"
                                 className="input input-bordered" required />
                         </div>
+                        
                         <div className="form-control flex flex-col md:flex-row gap-2 justify-between">
 
                             <select id="gender"

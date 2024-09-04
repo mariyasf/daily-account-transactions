@@ -16,39 +16,49 @@ const DashboardSideBar = () => {
             </h3>
             <ul className="pl-6">
                 <li>
-                    <div className="flex justify-between  items-center gap-2 p-3 cursor-pointer hover:bg-[#2397C81A]
+
+                    <Link to="/" className="w-full">
+                        <div className="flex justify-between  items-center gap-2 p-3 cursor-pointer hover:bg-[#2397C81A]
                      hover:text-[#2397C8] hover:border-[#2397C8] hover:border-0 hover:border-s-8">
-                        <div className="flex items-center gap-2">
-                            <GoHome className="text-2xl" />
-                            <Link to="/" className="w-full">
+                            <div className="flex items-center gap-2">
+                                <GoHome className="text-2xl" />
+
                                 Dashboard
-                            </Link>
+
+                            </div>
+                            <IoIosArrowForward />
                         </div>
-                        <IoIosArrowForward />
-                    </div>
+                    </Link>
+
                 </li>
                 <li>
-                    <div className="flex justify-between  items-center gap-2 p-3 cursor-pointer hover:bg-[#2397C81A]
+                    <Link to="/accounting">
+                        <div className="flex justify-between  items-center gap-2 p-3 cursor-pointer hover:bg-[#2397C81A]
                      hover:text-[#2397C8] hover:border-[#2397C8] hover:border-0 hover:border-s-8">
-                        <div className="flex items-center gap-2">
-                            <IoVideocamOutline className="text-2xl" />
+                            <div className="flex items-center gap-2">
+                                <IoVideocamOutline className="text-2xl" />
 
-                            <Link to="/accounting">Accounting</Link>
+                                Accounting
+                            </div>
+                            <IoIosArrowForward />
                         </div>
-                        <IoIosArrowForward />
-                    </div>
+                    </Link>
                 </li>
                 <li>
-                    <div className="flex justify-between  items-center gap-2 p-3 cursor-pointer hover:bg-[#2397C81A]
+
+
+                    <Link to="/report">
+                        <div className="flex justify-between  items-center gap-2 p-3 cursor-pointer hover:bg-[#2397C81A]
                      hover:text-[#2397C8] hover:border-[#2397C8] hover:border-0 hover:border-s-8">
-                        <div className="flex items-center gap-2">
-                            <FaEdit className="text-xl" />
+                            <div className="flex items-center gap-2">
+                                <FaEdit className="text-xl" />
 
-                            <Link to="/report">Reports</Link>
+                                Reports
 
+                            </div>
+                            <IoIosArrowForward />
                         </div>
-                        <IoIosArrowForward />
-                    </div>
+                    </Link>
                 </li>
 
 
