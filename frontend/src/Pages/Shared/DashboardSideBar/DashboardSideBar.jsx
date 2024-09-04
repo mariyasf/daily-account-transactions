@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const DashboardSideBar = () => {
     return (
         <div
-            className="h-screen w-[275px] bg-[#E4F2F8]"
+            className=" h-full  w-[275px] bg-[#E4F2F8]"
         >
             <h3
                 className="px-6 my-5 text-lg font-semibold text-[#2397C8]"

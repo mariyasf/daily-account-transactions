@@ -40,7 +40,7 @@ const MonthlyExpense = () => {
             fetchReportData();
         }
     }, [eID]);
-    console.log(data);
+    // console.log(data);
 
     return (
         <div className="flex flex-col lg:flex-row gap-4">
